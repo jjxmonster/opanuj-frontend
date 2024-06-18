@@ -1,39 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CharacterList from '../components/CharacterList';
 import SearchForm from '../components/SearchForm';
 import SearchTitle from '../components/SearchTitle';
-import { Character } from '../types/Character';
+import { useGetCharacters } from '../hooks/useGetCharacters';
+import { SEARCH_TITLE } from '../utils/constants';
+import { sortCharacters } from '../../prop-drilling-finish/utils/sortCharacters';
 
 function CharacterSearchContainer() {
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
-  const [characters, setCharacters] = useState<Character[]>([]);
   const [sortOption, setSortOption] = useState('');
+  const characters = useGetCharacters(name, gender);
 
-  useEffect(() => {
-    if (name || gender) {
-      fetch(
-        `https://rickandmortyapi.com/api/character/?name=${name}&gender=${gender}`
-      )
-        .then((response) => response.json())
-        .then((data) => setCharacters(data.results || []))
-        .catch((error) => console.error('Error fetching data:', error));
-    }
-  }, [name, gender]);
-
-  const sortedCharacters = [...characters].sort((a, b) => {
-    if (sortOption === 'name') {
-      return a.name.localeCompare(b.name);
-    } else if (sortOption === 'created') {
-      return new Date(a.created).getTime() - new Date(b.created).getTime();
-    }
-    return 0;
-  });
+  const sortedCharacters = sortCharacters(characters, sortOption);
 
   return (
     <>
       <div className="pt-20" />
-      <SearchTitle />
+      <SearchTitle title={SEARCH_TITLE} />
       <div className="pt-8" />
       <SearchForm
         name={name}
