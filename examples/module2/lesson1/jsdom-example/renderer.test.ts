@@ -25,4 +25,16 @@ describe('User renderer', () => {
     renderItems(container, users);
     expect(Array.from(container.querySelectorAll('li'))).toHaveLength(2);
   });
+
+  test("should render correct user's informaion", () => {
+    localStorage.setItem('userRole', 'admin');
+
+    const container = document.createElement('div');
+    renderItems(container, users);
+
+    users.forEach((user, index) => {
+      const li = container.querySelectorAll('li')[index];
+      expect(li.textContent).toContain(`Name: ${user.name}, Age: ${user.age}`);
+    });
+  });
 });
