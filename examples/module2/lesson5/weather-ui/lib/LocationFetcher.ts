@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { LocationWeather } from '../models/LocationWeather';
+import { LocationWeather, WeatherResponse } from '../models/LocationWeather';
 import { parseLocation } from './LocationParser';
 import { WeatherRequest } from '../models/WeatherRequest';
 
 async function getWeatherData(
   request: WeatherRequest
-): Promise<LocationWeather> {
-  const { data } = await axios.get<LocationWeather>(
+): Promise<LocationWeather<WeatherResponse>> {
+  const { data } = await axios.get<LocationWeather<WeatherResponse>>(
     `/api/weather?city=${request.city}&country=${request.country}`
   );
 
@@ -15,7 +15,7 @@ async function getWeatherData(
 
 export async function fetchWeather(
   locationQuery: string
-): Promise<LocationWeather | null> {
+): Promise<LocationWeather<WeatherResponse> | null> {
   const request = parseLocation(locationQuery);
 
   if (!request) {

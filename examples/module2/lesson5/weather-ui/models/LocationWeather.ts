@@ -5,14 +5,18 @@ export enum WeatherType {
   Snowy = 'snowy',
 }
 
-export interface DailyWeather {
+export type DailyWeather = {
+  averageTemperature: number;
   date: string;
   type: WeatherType;
-  averageTemperature: number;
-}
+};
 
-export interface LocationWeather {
+export interface LocationWeather<T> {
   city: string;
   country: string;
-  weatherDetails: DailyWeather[];
+  weatherDetails: T[] | { Weather: T[] };
 }
+
+export type WeatherResponse = Omit<DailyWeather, 'averageTemperature'> & {
+  [key in 'average_temperature' | 'averageTemperature']: number;
+};
