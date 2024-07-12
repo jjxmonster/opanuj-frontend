@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { LocationWeather } from '../models/LocationWeather';
+    import { parseWeatcherData } from '../lib/ParseWeatherData';
+  import { LocationWeather, WeatherResponse } from '../models/LocationWeather';
   import DailyWeather from './DailyWeather.svelte';
 
-  export let weather: LocationWeather;
+  export let weather: LocationWeather<WeatherResponse>;
+
 </script>
 
 <div>
@@ -10,8 +12,8 @@
     {weather.city}, {weather.country}
   </h2>
   <ul class="space-y-4">
-    {#each weather.weatherDetails as details}
-      <DailyWeather dailyWeather={details} />
+    {#each parseWeatcherData(weather) as details}
+      <DailyWeather dailyWeather={details} country={weather.country} />
     {/each}
   </ul>
 </div>
